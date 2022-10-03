@@ -1,0 +1,1 @@
+web: gunicorn ilpibetel.wsgi --log-file -

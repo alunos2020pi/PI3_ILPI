@@ -29,6 +29,10 @@ class Hospede(models.Model):
         ('AU',	'Ausência de familiares'),
         ('OB',	'Óbito do responsável'),
         ('MU',	'Mudança de endereço'),
+        ('PR',	'Procura por um cuidado especializado e focado no idoso'),
+        ('CO',	'Conflito e desgaste familiar'),
+        ('OJ',	'Ordem Judicial'),
+        ('OP',	'Opção própria do paciente'),
         ('OU',	'Outro'),
     )
     
@@ -470,4 +474,197 @@ class Prescricao(models.Model):
     def __str__(self):
         return f'{self.hospede} -> {self.medicacao}'
     
+class Enfermidade(models.Model):
+    nome = models.CharField(max_length=50, null=True, blank=True)
     
+    def __str__(self): 
+        return self.nome
+
+class Ficha_de_Avaliacao(models.Model):
+    hospede = models.ForeignKey('Hospede', on_delete=models.CASCADE)
+    enfermidade = models.ManyToManyField(Enfermidade, help_text='Selecione as enfermidades')
+    alergia_medicamentosa = models.BooleanField(null=True)
+    qual_alergia_med = models.CharField(max_length=50, null=True, blank=True)
+    internacoes_hospitalares = models.BooleanField(null=True)
+    data_da_ultima_internacao = models.DateField(null=True, blank=True)
+    duracao_da_internacao = models.CharField(max_length=50, null=True, blank=True)
+    motivacao_da_internacao = models.CharField(max_length=50, null=True, blank=True)
+    ja_sofreu_quedas = models.BooleanField(null=True)
+    ja_teve_fraturas = models.BooleanField(null=True)
+    fratura_ha_quanto_tempo = models.CharField(max_length=50, null=True, blank=True)
+    fratura_regiao_acometida = models.CharField(max_length=50, null=True, blank=True)
+    ja_foi_submetido_a_cirurgias = models.BooleanField(null=True)
+    qual_cirurgia = models.CharField(max_length=50, null=True, blank=True)
+    sindrome_respiratoria_aguda = models.BooleanField(null=True)
+    SRA_quando = models.CharField(max_length=50, null=True, blank=True)
+    SRA_se_curou_totalmente = models.BooleanField(null=True)
+    SRA_complicacoes = models.CharField(max_length=50, null=True, blank=True)
+    vacinado_contra_covid = models.BooleanField(null=True)
+    
+    VIAS_DE_ALIMENTACAO = (
+        ('ORA', 'Oral'),
+        ('SNG', 'SNG'),
+        ('SNE', 'SNE'),
+        ('PAR', 'Parenteral'),
+        ('JEJ', 'Jejunostomia'),
+        ('GAS', 'Gastrostomia'),
+    )
+    
+    vias_de_alimentacao = models.CharField(
+        max_length=3,
+        choices=VIAS_DE_ALIMENTACAO,
+        null=True, blank=True
+    )
+    
+    ALTERACOES_ORAIS = (
+        ('UPD', 'Uso de prótese dentária'),
+        ('DED', 'Dificuldade em deglutir'),
+        ('DEM', 'Dificuldade em mastigar'),
+    )
+    
+    alteracoes_orais = models.CharField(
+        max_length=3,
+        choices=ALTERACOES_ORAIS,
+        null=True, blank=True
+    )
+    
+    TIPO_DE_ALIMENTACAO = (
+        ('SO',	'Sólida'),
+        ('PA',	'Pastosa'),
+        ('SE',	'Semilíquida'),
+        ('LI',  'Líquida'),
+    )
+    
+    tipo_de_alimentacao = models.CharField(
+        max_length=2,
+        choices= TIPO_DE_ALIMENTACAO,
+        null=True, blank=True
+    )
+    
+    uso_de_tecnicas_assistivas_canudinho_espessante = models.BooleanField(null=True)
+    perda_de_peso_nos_ultimos_3meses = models.BooleanField(null=True)
+    quanto_perdeu = models.CharField(max_length=20, null=True, blank=True)
+    alergia_alimentar = models.BooleanField(null=True)
+    qual_alergia_alimentar = models.CharField(max_length=50, null=True, blank=True)
+    preferencia_alimentar = models.CharField(max_length=50, null=True, blank=True)
+    restricao_alimentar = models.CharField(max_length=50, null=True, blank=True)
+
+    VIA_DE_ELIMINACAO_INTESTINAL = (
+        ('N', 'Normal'),
+        ('F', 'Fralda'),
+    )
+    
+    via_de_eliminacao_intestinal = models.CharField(
+        max_length=1,
+        choices = VIA_DE_ELIMINACAO_INTESTINAL,
+        null=True, blank=True,
+    )
+    
+    VIA_DE_ELIMINACAO_URINARIA = (
+        ('ESP', 'Espontânea'),
+        ('SVD', 'SVD'),
+        ('SVA', 'SVA'),
+        ('FRA', 'Fralda'),
+    )
+    
+    via_de_eliminacao_urinaria = models.CharField(
+        max_length=3,
+        choices = VIA_DE_ELIMINACAO_URINARIA,
+        null=True, blank=True,
+    )
+    
+    incontinencia_urinaria = models.BooleanField(null=True)
+    pressao_arterial = models.CharField(max_length=20, null=True, blank=True)
+    saturacao = models.CharField(max_length=20, null=True, blank=True)
+    temperatura = models.CharField(max_length=20, null=True, blank=True)
+    pulso = models.CharField(max_length=20, null=True, blank=True)
+    FR = models.CharField(max_length=20, null=True, blank=True)
+    
+    OXIGENACAO = (
+        ('ESP', 'Espontânea'),
+        ('CAT', 'Oxigenioterapia -> Cateter Nasal'),
+        ('TRA', 'Oxigenioterapia -> Traqueostomia'),
+        ('MAS', 'Oxigenioterapia -> Máscara de O2'),
+    )
+    
+    oxigenacao = models.CharField(
+        max_length=3,
+        choices = OXIGENACAO,
+        null=True, blank=True,
+    )
+    
+    ESTADO_GERAL = (
+        ('BOM', 'Bom'),
+        ('REG', 'Regular'),
+        ('MAU', 'Mau'),
+    )
+    
+    estado_geral = models.CharField(
+        max_length=3,
+        choices = ESTADO_GERAL,
+        null=True, blank=True,
+    )
+    
+    NIVEL_DE_CONSCIENCIA = (
+        ('CON', 'Consciente'),
+        ('INC', 'Inconsciente'),
+        ('PPC', 'Perda parcial - confuso'),
+    )
+    
+    nivel_de_consciencia = models.CharField(
+        max_length=3,
+        choices = NIVEL_DE_CONSCIENCIA,
+        null=True, blank=True,
+    )
+    
+    PALIDEZ = (
+        ('COR', 'Corado'),
+        ('HIP', 'Hipercorado'),
+        ('DES', 'Descorado'),
+    )
+    
+    palidez = models.CharField(
+        max_length=3,
+        choices = PALIDEZ,
+        null=True, blank=True,
+    )
+    
+    HIDRATACAO = (
+        ('HID', 'Hidratado'),
+        ('DES', 'Desidratado'),
+    )
+    
+    hidratacao = models.CharField(
+        max_length=3,
+        choices = HIDRATACAO,
+        null=True, blank=True,
+    )
+    
+    ICTERICIA = (
+        ('ANI', 'Anictérico'),
+        ('ICT', 'Ictérico'),
+    )
+    
+    ictericia = models.CharField(
+        max_length=3,
+        choices = ICTERICIA,
+        null=True, blank=True,
+    )
+    
+    CIANOSE = (
+        ('ACI', 'Acianótico'),
+        ('CIA', 'Cianótico'),
+    )
+    
+    cianose = models.CharField(
+        max_length=3,
+        choices = CIANOSE,
+        null=True, blank=True,
+    )
+    
+    tabagismo = models.BooleanField(null=True)
+    alcoolismo = models.BooleanField(null=True)
+    outras_drogas = models.BooleanField(null=True)
+    
+    def __str__(self):
+        return f'Ficha de Avaliação: {self.hospede}' 

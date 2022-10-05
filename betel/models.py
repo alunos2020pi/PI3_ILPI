@@ -501,6 +501,18 @@ class Ficha_de_Avaliacao(models.Model):
     SRA_complicacoes = models.CharField(max_length=50, null=True, blank=True)
     vacinado_contra_covid = models.BooleanField(null=True)
     
+    APETITE = (
+        ('BOM', 'Bom'),
+        ('RUI', 'Ruim'),
+    )
+    
+    apetite = models.CharField(
+        max_length=3,
+        choices=APETITE,
+        null=True, blank=True
+    )
+    
+        
     VIAS_DE_ALIMENTACAO = (
         ('ORA', 'Oral'),
         ('SNG', 'SNG'),
@@ -542,12 +554,31 @@ class Ficha_de_Avaliacao(models.Model):
     )
     
     uso_de_tecnicas_assistivas_canudinho_espessante = models.BooleanField(null=True)
+    peso_habitual = models.FloatField(null=True, blank=True)
+    peso_atual = models.FloatField(null=True, blank=True)   
     perda_de_peso_nos_ultimos_3meses = models.BooleanField(null=True)
     quanto_perdeu = models.CharField(max_length=20, null=True, blank=True)
+    altura = models.FloatField(null=True, blank=True)
+    imc = models.FloatField(null=True, blank=True)
+    circunferencia_cintura = models.FloatField(null=True, blank=True)
     alergia_alimentar = models.BooleanField(null=True)
     qual_alergia_alimentar = models.CharField(max_length=50, null=True, blank=True)
     preferencia_alimentar = models.CharField(max_length=50, null=True, blank=True)
     restricao_alimentar = models.CharField(max_length=50, null=True, blank=True)
+
+    ELIMINACAO_INTESTINAL = (
+        ('NOR', 'Normal'),
+        ('CON', 'Constipação'),
+        ('DIA', 'Diarreia'),
+        ('MHI', 'Mudança de hábito Intestinal'),
+    )
+    
+    eliminacao_intestinal = models.CharField(
+        max_length=3,
+        choices = ELIMINACAO_INTESTINAL,
+        null=True, blank=True,
+    )
+
 
     VIA_DE_ELIMINACAO_INTESTINAL = (
         ('N', 'Normal'),
@@ -560,20 +591,82 @@ class Ficha_de_Avaliacao(models.Model):
         null=True, blank=True,
     )
     
+    ELIMINACAO_URINARIA = (
+        ('NOR', 'Normal'),
+        ('M5V', 'Menos de 5 vezes por dia'),
+        ('POL', 'Polaciúria'),
+        ('NIC', 'Nicturia'),
+        ('URG', 'Urgência Miccional'),
+        ('DIM', 'Diminuição do jato'),
+    )
+    
+    eliminacao_urinaria = models.CharField(
+        max_length=3,
+        choices = ELIMINACAO_URINARIA,
+        null=True, blank=True,
+    )
+
+
     VIA_DE_ELIMINACAO_URINARIA = (
         ('ESP', 'Espontânea'),
         ('SVD', 'SVD'),
         ('SVA', 'SVA'),
         ('FRA', 'Fralda'),
     )
-    
+
+
     via_de_eliminacao_urinaria = models.CharField(
         max_length=3,
         choices = VIA_DE_ELIMINACAO_URINARIA,
         null=True, blank=True,
     )
     
+
+    
     incontinencia_urinaria = models.BooleanField(null=True)
+    
+    CICLO_MENSTRUAL = (
+        ('SA','Sem alterações'),
+        ('MP','Menopausa'),
+        ('AD','Amenorréia Disfuncional'),
+    )
+    
+    ciclo_menstrual = models.CharField(
+        max_length=2,
+        choices = CICLO_MENSTRUAL,
+        null=True, blank=True,
+    )
+    
+    SONO_E_REPOUSO = (
+        ('NTI', 'Não tem insonia'),
+        ('DCS', 'Apresenta dificuldade em conciliar o sono'),
+        ('AVV', 'Acorda várias vezes'),
+        ('SON', 'Sonolência'),
+        ('DDD', 'Dorme durante o dia'),
+        ('TIO', 'Tem insônia em outro local'),
+    )
+    
+    sono_e_repouso = models.CharField(
+        max_length=3,
+        choices = SONO_E_REPOUSO,
+        null=True, blank=True,
+    )
+    
+    dorme_quantas_horas_por_noite = models.PositiveIntegerField(null=True, blank=True)
+    
+    apresenta_dor = models.BooleanField(null=True)
+    onde_apresenta_dor = models.CharField(max_length=50, null=True, blank=True)
+    dor_de_cabeca = models.BooleanField(null=True)
+    sua_dor_irradia = models.BooleanField(null=True)
+    para_onde_irradia = models.CharField(max_length=50, null=True, blank=True)
+    quando_a_dor_se_inicia = models.CharField(max_length=50, null=True, blank=True)
+    dor_passa_com_medicamento = models.BooleanField(null=True)
+    permanece_muito_tempo_sentado = models.BooleanField(null=True)
+    permanece_muito_com_a_cabeca_abaixada = models.BooleanField(null=True)
+    possui_lesao_na_coluna_cervical = models.BooleanField(null=True)
+    mobilidade_reduzida = models.BooleanField(null=True)
+    
+    
     pressao_arterial = models.CharField(max_length=20, null=True, blank=True)
     saturacao = models.CharField(max_length=20, null=True, blank=True)
     temperatura = models.CharField(max_length=20, null=True, blank=True)

@@ -261,12 +261,18 @@ class Hospede(models.Model):
  
     class Meta: 
         ordering = ['nome_do_hospede'] 
+        verbose_name_plural = "hóspedes"
 
     def __str__(self): 
         return self.nome_do_hospede 
 
 class Fator_de_Risco_Social(models.Model):
     nome = models.CharField(max_length=50, null=True, blank=True)
+    
+    class Meta: 
+        verbose_name_plural = "Fatores de risco social"
+    
+    
     
     def __str__(self): 
         return self.nome
@@ -304,8 +310,8 @@ class Familiar(models.Model):
 
  
     class Meta: 
-
         ordering = ['hospede', 'nome'] 
+        verbose_name_plural = "familiares"
 
     def __str__(self): 
 
@@ -339,6 +345,10 @@ class Equipe(models.Model):
     telefone_celular = models.CharField(max_length=20, help_text='Formato: (00)00000-0000', null=True, blank=True)
     telefone_outro = models.CharField(max_length=20, help_text='Formato: (00)00000-0000', null=True, blank=True)
     
+    class Meta: 
+        ordering = ['nome', ] 
+        verbose_name_plural = "Equipe"
+    
     def __str__(self): 
         return self.nome
 
@@ -347,6 +357,10 @@ class Anotacao_de_Enfermagem(models.Model):
     data_hora = models.DateTimeField(null=True, blank=True)
     anotacao = models.CharField(max_length=255, null=True, blank=True)
     responsavel = models.ForeignKey('Equipe', on_delete=models.SET_NULL, blank=True, null=True,)
+    
+    class Meta: 
+        ordering = ['hospede', 'data_hora'] 
+        verbose_name_plural = "Anotações de Enfermagem"
     
     def __str__(self):
         return f'{self.hospede} -> {self.data_hora}'
@@ -363,6 +377,10 @@ class Sinais_Vitais(models.Model):
     evacuacao = models.CharField(max_length=20, null=True, blank=True)
     responsavel = models.ForeignKey('Equipe', on_delete=models.SET_NULL, blank=True, null=True,)
     
+    class Meta: 
+        ordering = ['hospede', 'data_hora'] 
+        verbose_name_plural = "Sinais Vitais"
+    
     def __str__(self):
         return f'{self.hospede} -> {self.data_hora}'
     
@@ -371,6 +389,10 @@ class Controle_de_Dextro(models.Model):
     data_hora = models.DateTimeField(null=True, blank=True)
     dextro = models.CharField(max_length=20, null=True, blank=True)
     responsavel = models.ForeignKey('Equipe', on_delete=models.SET_NULL, blank=True, null=True,)
+    
+    class Meta: 
+        ordering = ['hospede', 'data_hora'] 
+        verbose_name_plural = "Controle de Dextro"
     
     def __str__(self):
         return f'{self.hospede} -> {self.data_hora}'
@@ -395,6 +417,10 @@ class Evolucao(models.Model):
     evolucao = models.TextField(max_length=500, null=True, blank=True) 
     responsavel = models.ForeignKey('Equipe', on_delete=models.SET_NULL, blank=True, null=True,)
     
+    class Meta: 
+        ordering = ['hospede', 'tipo_de_evolucao', 'data_hora'] 
+        verbose_name_plural = "Evoluções"
+    
     def __str__(self):
         return f'{self.hospede} -> {self.data_hora}'
 
@@ -415,6 +441,9 @@ class Medicacao(models.Model):
     
     fabricante = models.CharField(max_length=25, null=True, blank=True)
     generico = models.BooleanField(null=True)
+    
+    class Meta: 
+        verbose_name_plural = "Medicações"
     
     def __str__(self):
         return f'{self.nome}, {self.quantidade} {self.unidade} - {self.fabricante} Genérico? {self.generico}'
@@ -469,6 +498,10 @@ class Prescricao(models.Model):
     
     data_da_prescricao = models.DateField(null=True, blank=True)
     medico_responsavel = models.ForeignKey('Equipe', on_delete=models.SET_NULL, blank=True, null=True,)
+    
+    class Meta: 
+        ordering = ['hospede', 'horario', 'medicacao', ] 
+        verbose_name_plural = "Prescrições"
   
     
     def __str__(self):
@@ -759,5 +792,26 @@ class Ficha_de_Avaliacao(models.Model):
     alcoolismo = models.BooleanField(null=True)
     outras_drogas = models.BooleanField(null=True)
     
+    class Meta: 
+        ordering = ['hospede', ] 
+        verbose_name_plural = "Fichas de Avaliação"
+    
     def __str__(self):
         return f'Ficha de Avaliação: {self.hospede}' 
+        
+class Item(models.Model):
+    nome = models.CharField(max_length=50, null=True, blank=True)
+    
+    class Meta: 
+        verbose_name_plural = "Itens"
+    
+    def __str__(self): 
+        return self.nome
+
+class Estoque(models.Model):
+    hospede = models.ForeignKey('Hospede', on_delete=models.CASCADE)        
+    item = models.ForeignKey('Item', on_delete=models.CASCADE)
+    quantidade = models.PositiveIntegerField(null=True, blank=True)
+    
+    def __str__(self):
+        return f'{self.hospede} -> {self.item}: {self.quantidade}'
